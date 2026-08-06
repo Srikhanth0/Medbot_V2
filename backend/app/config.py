@@ -35,7 +35,13 @@ class Settings(BaseSettings):
     # Backend App settings
     BACKEND_PORT: int = 8000
     LOG_LEVEL: str = "INFO"
-    CORS_ORIGINS: List[str] = ["http://localhost:5173"]
+    CORS_ORIGINS: List[str] = [
+        "https://medbot-v2-two.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "*",
+    ]
 
     model_config = SettingsConfigDict(
         env_file=".env",
