@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd medbot && npm install && npm run build",
+  "outputDirectory": "medbot/dist",
+  "installCommand": "cd medbot && npm install",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}
