@@ -1,6 +1,0 @@
-{
-  "buildCommand": "cd medbot-app && npm run build",
-  "installCommand": "cd medbot-app && npm install",
-  "outputDirectory": "medbot-app/dist",
-  "framework": "vite"
-}

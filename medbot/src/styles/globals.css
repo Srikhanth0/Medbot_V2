@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #11222C;
+  --color-bg-sidebar: #DDD4D8;
+  --color-bg-card: #DDD4D8;
+  --color-bg-input: #122B36;
+  --color-bg-chat-input: #49565C;
+  --color-accent-cyan: #0891B2;
+  --color-accent-green: #16A34A;
+  --color-accent-sage: #478768;
+  --color-glow: #00A3E0;
+  
+  --font-sans: 'Figtree', sans-serif;
+  --font-noto: 'Noto Sans', sans-serif;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: white;
+  font-family: var(--font-sans);
+}
+
+.figma-bg-pattern {
+  background-image: radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.3);
+}

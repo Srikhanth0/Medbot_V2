@@ -1,213 +1,140 @@
-# MedBot - AI Health Assistant
+# 🩺 MedBot — AI Health & Medical Citation RAG System
 
-MedBot is an intelligent health monitoring application that combines AI-powered chat capabilities with 3D character animations and medical data analysis.
+MedBot is a production-grade **Medical Understanding & Physical Rehabilitation Platform** combining **Retrieval-Augmented Generation (RAG)** with **verifiable medical citations**, **safety guardrails**, and **interactive 3D exercise visualizations**.
 
+---
 
+## ⚡ Tech Stack & Architecture
 
-## Features
+### Frontend
+- [React 19](https://react.dev/) — Component-driven user interface architecture
+- [TypeScript](https://www.typescriptlang.org/) — End-to-end static type safety
+- [Vite 8](https://vitejs.dev/) — Lightning-fast build tooling and HMR
+- [Three.js](https://threejs.org/) & [React Three Fiber (R3F)](https://r3f.docs.pmnd.rs/) — Real-time 3D character rendering & FBX exercise animations
+- [TailwindCSS v4](https://tailwindcss.com/) — Modern utility-first styling with HSL color tokens
+- [Zustand](https://zustand.docs.pmnd.rs/) — Light, fast state management for chat & 3D model controls
+- [Lucide React](https://lucide.dev/) — Clean, consistent UI icon library
 
-- **AI Chat Interface**: Interactive health assistant powered by Google's Gemini AI
-- **3D Character Animations**: Engaging 3D character with exercise animations
-- **Medical Data Analysis**: OCR-based prescription and ECG analysis
-- **Health Monitoring**: Track vital signs and health metrics
-- **Modern UI**: Clean, responsive interface built with React and Tailwind CSS
+### Backend & AI Pipeline
+- [FastAPI](https://fastapi.tiangolo.com/) — High-performance Python web framework for async streaming APIs
+- [LangGraph](https://langchain-ai.github.io/langgraph/) — Stateful multi-agent RAG workflow engine
+- [NVIDIA NIM Microservices](https://www.nvidia.com/en-us/ai-data-science/foundation-models/) — High-throughput LLM generation (`thinkingmachines/inkling`)
+- [OpenAI API](https://platform.openai.com/docs/) — Automatic failover LLM provider (GPT-4o / GPT-4o-mini)
+- [Supabase PostgreSQL](https://supabase.com/docs) & [pgvector](https://github.com/pgvector/pgvector) — Vector embeddings, HNSW similarity search, hybrid full-text ranking
+- [SSE-Starlette](https://github.com/sysid/sse-starlette) — Server-Sent Events for real-time response token streaming
 
-## Tech Stack
+---
 
-- **Frontend**: React 18, TypeScript, Vite
-- **Backend**: Node.js, Express
-- **AI**: Google Gemini API
-- **3D Graphics**: Three.js
-- **Styling**: Tailwind CSS
-- **OCR**: Tesseract.js
-- **Charts**: Recharts
+## 🤸 3D Exercise Model Catalog
 
-## Project Structure
+MedBot features interactive 3D exercise models powered by Three.js/R3F. When a user asks for workout guidance, mobility stretches, or physical rehab, the **Intent Router** automatically identifies exercise intent, selects the optimal model, and streams the structured payload to animate the 3D viewer in real-time.
 
-```
-medbot/
-├── medbot-app/          # React frontend application
+| Animation ID | Exercise Title | Target Area | Difficulty | 3D Asset Path |
+|---|---|---|---|---|
+| `jumping_jacks` | Jumping Jacks | Full Body & Cardio | Easy | `/models/Jumping_Jacks.fbx` |
+| `kettlebell_swing` | Kettlebell Swing | Posterior Chain & Core | Intermediate | `/models/Kettlebell_Swing.fbx` |
+| `pike_walk` | Pike Walk / Inchworm | Core, Shoulders & Hamstrings | Intermediate | `/models/Pike_Walk.fbx` |
+| `pistol` | Pistol Squat | Quadriceps, Glutes & Balance | Advanced | `/models/Pistol.fbx` |
+| `situps` | Sit-Ups | Abdominals & Hip Flexors | Easy | `/models/Situps.fbx` |
+
+---
+
+## 🛠️ Project Structure
+
+```text
+setup-medcore-ai-agent/
+├── backend/
+│   ├── app/
+│   │   ├── db/                 # Supabase client, queries & migration SQL
+│   │   ├── langgraph/          # LangGraph state machine & processing nodes
+│   │   │   ├── nodes/          # safety_gate, intent_router, retrieval, post_check, generation
+│   │   │   ├── graph.py        # Workflow graph compilation
+│   │   │   └── state.py        # GraphState dataclass & IntentCategory enum
+│   │   ├── llm/                # Provider abstraction (NVIDIA NIM primary + OpenAI fallback)
+│   │   ├── models/             # Pydantic schemas (CitationItem, MessageResponse, etc.)
+│   │   ├── routers/            # FastAPI API endpoints (conversations, messages, exercises, reports)
+│   │   ├── main.py             # FastAPI entry point & HTTP request logger middleware
+│   │   └── config.py           # Environment settings & configuration
+│   └── requirements.txt
+├── medbot/
+│   ├── public/
+│   │   └── models/             # 3D FBX exercise animation assets
 │   ├── src/
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Page components
-│   │   ├── hooks/       # Custom React hooks
-│   │   └── assets/      # Static assets
-│   ├── public/          # Public assets
-│   └── package.json     # Frontend dependencies
-├── shared/              # Shared 3D models and assets
-├── docs/                # Documentation
-├── public/              # Backend public assets
-├── server.js            # Express backend server
-├── .gitignore           # Git ignore patterns
-└── package.json         # Root package.json with scripts
+│   │   ├── components/
+│   │   │   ├── chat/           # ChatBubble, CitationCard, ConfidenceBadge, ChatInput
+│   │   │   └── model/          # CharacterViewer (3D Canvas), ModelControlPanel, AnimationController
+│   │   ├── lib/api/client.ts   # Backend API client & SSE event parser
+│   │   ├── stores/             # chatStore (Zustand) & modelStore
+│   │   └── types/              # ChatMessage, CitationItem, ExerciseData types
+│   └── package.json
+├── .gitignore                  # Git exclusion rules
+└── README.md                   # Project documentation
 ```
 
-## Three.js FBX Viewers
+---
 
-### CDN-based Viewer (`threejs-viewer-cdn/`)
-- **Purpose:** Simple standalone Three.js viewer using CDN imports
-- **Files:** `index.html`, `app.js`
-- **Usage:** Open `threejs-viewer-cdn/index.html` in a browser
-- **Features:** Basic FBX loading and animation playback
+## 🚀 Quick Start Guide
 
-### Build-based Viewer (`threejs-viewer-build/`)
-- **Purpose:** Advanced Three.js viewer with build system
-- **Files:** Source files, build templates
-- **Usage:** 
-  ```bash
-  npm run dev:threejs    # Start Webpack dev server
-  npm run build:threejs  # Build for production
-  ```
-- **Features:** Animation switching, UI controls, hot reloading
+### Prerequisites
+- Node.js (v18+)
+- Python (v3.11+)
+- PostgreSQL Database with `pgvector` enabled (e.g. Supabase)
 
-## MEDBOT Application (`medbot-app/`)
+### 1. Backend Setup
 
-### React/TypeScript Health Monitoring App with AI Integration
-- **Purpose:** Complete medical health monitoring application with Gemini AI assistant
-- **Structure:**
-  - `src/components/` - Reusable UI components
-  - `src/pages/` - Application pages (including AI-powered ChatInterface)
-  - `src/utils/` - Utility functions (including Gemini API integration)
-  - `src/` - Main app files
-- **AI Features:**
-  -  **Gemini AI Chat Interface** - Health-focused AI assistant
-  -  **Real-time Chat** - Instant AI responses
-  -  **Secure API Proxy** - Backend handles API keys safely
-  -  **Health Context** - AI trained for medical assistance
-- **Usage:**
-  ```bash
-  npm run dev:medbot    # Start Vite dev server
-  npm run build:medbot  # Build for production
-  ```
-
-## Gemini AI Integration
-
-### Backend Proxy Server (`server.js`)
-- **Purpose:** Secure API key handling for Gemini AI
-- **Features:**
-  -  **API Key Protection** - Never exposed to frontend
-  -  **CORS Enabled** - Allows frontend communication
-  -  **Health Endpoints** - Server status monitoring
-  -  **Error Handling** - Robust error management
-
-### Frontend Integration
-- **ChatInterface Component** - AI-powered health assistant
-- **Utility Functions** - Reusable Gemini API functions
-- **Health Context** - Specialized prompts for medical assistance
-
-### Setup:
 ```bash
-# 1. Get Gemini API key from Google AI Studio
-# 2. Create .env file:
-copy env.example .env
-# 3. Add your API key to .env:
-GEMINI_API_KEY=your_actual_api_key_here
+cd backend
 
-# 4. Start the server:
-npm run dev:server
+# Create virtual environment
+python -m venv .venv
+# On Windows PowerShell:
+.venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment variables
+# Copy .env.example or create .env with your keys:
+# NVIDIA_API_KEY=nvapi-...
+# OPENAI_API_KEY=sk-...
+# SUPABASE_URL=https://your-supabase-id.supabase.co
+# SUPABASE_KEY=your-service-role-key
+# DATABASE_URL=postgresql://user:pass@host:5432/postgres
+
+# Run database migration in Supabase SQL Editor:
+# backend/app/db/migrations/001_core_schema.sql
+
+# Start backend server
+python -m uvicorn app.main:app --reload --port 8000
 ```
 
-##  Shared Assets (`shared/`)
+### 2. Frontend Setup
 
-### Models (`shared/models/`)
-- FBX animation files shared between Three.js viewers
-- Contains exercise animations: Idle Transition, Jumping Jacks, Kettlebell Swing, etc.
-
-### Libraries (`shared/libs/`)
-- Legacy Three.js and FBXLoader files (for manual use)
-- Not used in the current CDN/module-based setup
-
-##  Documentation (`docs/`)
-
-- `SCRIPTS_OVERVIEW.md` - Detailed script documentation
-- `FOLDER_STRUCTURE_PLAN.md` - Structure planning document
-- `GEMINI_SETUP.md` - Complete Gemini AI setup guide
-- MEDBOT application documentation
-- Project planning and todo files
-
-##  Quick Start
-
-### Initial Setup:
 ```bash
-# Install all dependencies (root + MEDBOT app)
-npm run install:all
+cd medbot
 
-# Setup Gemini AI (optional but recommended)
-copy env.example .env
-# Edit .env and add your Gemini API key
-```
+# Install dependencies
+npm install
 
-### Development:
-```bash
-# Run all applications simultaneously
+# Start Vite development server
 npm run dev
-
-# Or run individually:
-npm run dev:threejs    # Three.js viewer (port 3000)
-npm run dev:medbot     # MEDBOT app (port 5173)
-npm run dev:server     # Gemini AI server (port 3001)
 ```
 
-### Production Build:
-```bash
-# Build all applications
-npm run build
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-# Or build individually:
-npm run build:threejs
-npm run build:medbot
-```
+---
 
-### CDN Viewer (No build required):
-```bash
-# Simply open in browser
-threejs-viewer-cdn/index.html
-```
+## 🔑 Key Features & Pipeline Flow
 
-##  Development
+1. **Safety Gate**: Scans user query for emergency signals or direct diagnostic requests. Reframes safely with medical disclaimers if required.
+2. **Intent Router**: Classifies queries into `casual_chat`, `memory_chat`, `document_lookup`, or `exercise`. Bypasses vector retrieval when RAG is unneeded for ultra-low latency response times.
+3. **Hybrid Vector Search**: Combines cosine similarity on 1024-dimensional embeddings with PostgreSQL `tsvector` full-text search.
+4. **LLM Provider Abstraction**: Connects to NVIDIA NIM as primary inference engine with automated failover to OpenAI GPT-4o.
+5. **Verifiable Source Citations**: Post-check validator verifies inline `[chunk_id]` tags and enriches response with document names, page numbers, section headers, and exact evidence quotes.
+6. **Dynamic 3D Exercise Engine**: Renders 3D character models in React Three Fiber with customizable camera controls (X, Y, Zoom) and automatic exercise animation playback.
 
-### Centralized NPM Management:
-- **Root `package.json`** - Manages Three.js viewer and Gemini server dependencies
-- **`medbot-app/package.json`** - Manages React/TypeScript app dependencies
-- **Concurrent Development** - Run all apps simultaneously with `npm run dev`
+---
 
-### Available Scripts:
-- `npm run dev` - Start all applications (Three.js + MEDBOT + Gemini)
-- `npm run dev:threejs` - Three.js viewer only
-- `npm run dev:medbot` - MEDBOT app only
-- `npm run dev:server` - Gemini AI server only
-- `npm run build` - Build all applications
-- `npm run install:all` - Install all dependencies
+## 🛡️ License
 
-##  AI Features
-
-### Health Assistant Capabilities:
--  **Medical Information** - General health knowledge
--  **Exercise Advice** - Fitness recommendations
--  **Nutrition Guidance** - Dietary suggestions
--  **Mental Health Support** - Wellness tips
--  **Safety Reminders** - Always encourages professional consultation
-
-### Integration Points:
-- **ChatInterface** - Main AI chat component
-- **Health Pages** - AI assistance for health metrics
-- **Exercise Viewer** - AI guidance for 3D exercises
-- **Profile Management** - Personalized AI recommendations
-
-##  Notes
-
-- All Three.js viewers share the same FBX models from `shared/models/`
-- Import paths have been updated to work with the new structure
-- Each application can be developed and deployed independently
-- The MEDBOT app uses React/TypeScript with Vite and includes AI integration
-- The Three.js viewers support both CDN and build-based approaches
-- Centralized npm management allows easy dependency updates and script execution
-- Gemini AI integration provides intelligent health assistance
-
-##  Contributing
-
-- Each application has its own development workflow
-- Shared assets are maintained in the `shared/` folder
-- Documentation is centralized in the `docs/` folder
-- Use root-level npm scripts for common operations
-- AI integration follows security best practices 
+Educational & Research Purpose Only. MedBot does not diagnose conditions or prescribe treatments.

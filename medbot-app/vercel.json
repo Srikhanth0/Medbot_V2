@@ -1,6 +1,0 @@
-{
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
-  "buildCommand": "cd medbot-app && npm run build",
-  "installCommand": "cd medbot-app && npm install",
-  "framework": "vite"
-}
