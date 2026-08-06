@@ -85,9 +85,10 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         },
         (citations, confidence, recommendedExercise) => {
           console.log('[MedBot Client] SSE Stream completed. Citations:', citations, 'Confidence:', confidence, 'Recommended Exercise:', recommendedExercise);
+          const validConfidence = (['high', 'medium', 'low'].includes(confidence as string) ? confidence : undefined) as 'high' | 'medium' | 'low' | undefined;
           set((state) => ({
             messages: state.messages.map((m) =>
-              m.id === botMsgId ? { ...m, citations, confidence, recommendedExercise, isStreaming: false } : m
+              m.id === botMsgId ? { ...m, citations, confidence: validConfidence, recommendedExercise, isStreaming: false } : m
             ),
             isTyping: false, 
             activeExercise: recommendedExercise || null,

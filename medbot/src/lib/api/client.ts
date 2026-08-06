@@ -72,7 +72,7 @@ export class ApiClient {
     message: string,
     token: string,
     onToken: (tokenText: string) => void,
-    onDone: (citations: any[], confidence?: string, recommendedExercise?: any) => void,
+    onDone: (citations: any[], confidence?: 'high' | 'medium' | 'low', recommendedExercise?: any) => void,
     onError: (err: Error) => void
   ): Promise<void> {
     try {
