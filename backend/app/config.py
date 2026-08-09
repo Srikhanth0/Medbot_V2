@@ -43,6 +43,15 @@ class Settings(BaseSettings):
         "*",
     ]
 
+    # Medical Report RAG Pipeline settings (medreport-rag-prd.md §6)
+    EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
+    CHUNK_SIZE: int = 1500
+    CHUNK_OVERLAP: int = 200
+    TOP_K: int = 5
+    SIMILARITY_THRESHOLD: float = 0.35
+    MAX_UPLOAD_MB: int = 15
+    CHROMA_PERSIST_DIR: str = "./chroma_db"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

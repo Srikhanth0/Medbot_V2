@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.db.client import close_db_pool, init_db_pool
-from app.routers import conversations, exercises, health, messages, reports
+from app.routers import conversations, exercises, health, messages, reports, rag_router
 
 settings = get_settings()
 
@@ -102,6 +102,7 @@ app.include_router(reports.router)
 app.include_router(conversations.router)
 app.include_router(messages.router)
 app.include_router(exercises.router)
+app.include_router(rag_router.router)
 
 
 @app.get("/")
